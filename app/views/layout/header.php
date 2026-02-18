@@ -22,8 +22,8 @@
                         <a class="nav-link" href="/vrossoc/public/">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/vrossoc/public/productos">Productos</a>
-                    </li>
+    <a class="nav-link" href="/vrossoc/public/producto/index">Productos</a>
+</li>
                     <li class="nav-item">
                         <a class="nav-link" href="/vrossoc/public/carrito">Carrito</a>
                     </li>
