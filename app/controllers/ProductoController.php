@@ -13,18 +13,19 @@ class ProductoController extends Controller {
     /**
      * Mostrar listado de productos (catálogo)
      */
-    public function index() {
-        // Obtener todos los productos
-        $productos = $this->productoModel->getTodos();
-        
-        $data = [
-            'titulo' => 'Catálogo de Productos - Vrossoc',
-            'productos' => $productos
-        ];
-        
-        $this->view('productos/catalogo', $data);
-    }
+  public function index() {
+    // Obtener todos los productos
+    $productos = $this->productoModel->getTodos();
     
+    $data = [
+        'titulo' => 'Catálogo de Productos - Vrossoc',
+        'productos' => $productos,
+        'active_menu' => 'productos'
+    ];
+    
+    $this->view('productos/catalogo', $data);
+}
+
     /**
      * Mostrar detalle de un producto
      */

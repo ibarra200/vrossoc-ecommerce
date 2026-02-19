@@ -10,19 +10,22 @@ class HomeController extends Controller {
     }
     
     public function index() {
-        // Obtener productos destacados
-        $destacados = $this->productoModel->getDestacados(4);
-        
-        $data = [
-            'titulo' => 'Bienvenido a Vrossoc',
-            'descripcion' => 'Tu tienda de ropa online',
-            'destacados' => $destacados
-        ];
-        
-        $this->view('inicio', $data);
-    }
+    // Obtener productos destacados
+    $destacados = $this->productoModel->getDestacados(4);
+    
+    $data = [
+        'titulo' => 'Bienvenido a Vrossoc',
+        'descripcion' => 'Tu tienda de ropa online',
+        'destacados' => $destacados,
+        'active_menu' => 'inicio'
+    ];
+    
+    $this->view('inicio', $data);
+}
+
     
     public function about() {
         echo "Acerca de Vrossoc";
     }
+    
 }

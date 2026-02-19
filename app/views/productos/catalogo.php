@@ -17,7 +17,7 @@
                 <div class="card h-100 producto-card">
                     <?php 
                     // Buscar imagen principal o usar placeholder
-                    $imagen = 'https://via.placeholder.com/300';
+                    $imagen = 'https://placehold.co/300x300';
                     ?>
                     <img src="<?php echo $imagen; ?>" class="card-img-top" alt="<?php echo $producto['nombre']; ?>">
                     <div class="card-body">
