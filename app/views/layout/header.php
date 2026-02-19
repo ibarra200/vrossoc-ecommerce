@@ -10,8 +10,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Google Fonts (tipografía linda) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Tu CSS personalizado -->
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/style.css">
+    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Nuestro JS del carrito (SIEMPRE después de jQuery) -->
+<script src="<?php echo BASE_URL; ?>/assets/js/carrito.js"></script>
+
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
@@ -44,7 +50,7 @@
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="/vrossoc/public/carrito/index">
                             <i class="bi bi-cart3 fs-5"></i>
-                            <span id="contador-carrito" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none; font-size: 0.7rem;">0</span>
+                         <span id="contador-carrito" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">0</span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -63,3 +69,23 @@
         </div>
     </nav>
     <main class="container my-4">
+        <!-- Script de verificación del carrito -->
+<script>
+// Verificar que el contador existe y funciona
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Verificando contador...');
+    const contador = document.getElementById('contador-carrito');
+    if (contador) {
+        console.log('✅ Contador encontrado en el DOM');
+        
+        // Cargar carrito y actualizar
+        const carrito = JSON.parse(localStorage.getItem('vrossoc_carrito')) || [];
+        const totalItems = carrito.reduce((sum, item) => sum + (parseInt(item.cantidad) || 1), 0);
+        contador.textContent = totalItems;
+        contador.style.display = totalItems > 0 ? 'inline' : 'none';
+        console.log('Contador inicializado en:', totalItems);
+    } else {
+        console.log('❌ ERROR: No se encontró el elemento #contador-carrito');
+    }
+});
+</script>

@@ -203,9 +203,43 @@ colores.forEach(btn => {
     });
 });
 
-// Evento para agregar al carrito - VERSIÓN SIMPLIFICADA
+// Función para actualizar contador (por si no existe la global)
+function actualizarContadorLocal() {
+    const carrito = JSON.parse(localStorage.getItem('vrossoc_carrito')) || [];
+    const totalItems = carrito.reduce((sum, item) => sum + (parseInt(item.cantidad) || 1), 0);
+    const contador = document.getElementById('contador-carrito');
+    
+    if (contador) {
+        if (totalItems > 0) {
+            contador.textContent = totalItems;
+            contador.style.display = 'inline';
+        } else {
+            contador.style.display = 'none';
+        }
+        console.log('Contador actualizado a:', totalItems);
+    }
+}
+
+// Evento para agregar al carrito - VERSIÓN CORREGIDA
 btnAgregar.addEventListener('click', function() {
+    console.log('1. Botón clickeado');
+    console.log('2. Color seleccionado:', colorSeleccionado);
+    console.log('3. Talle seleccionado:', talleSeleccionado);
+    
     if (colorSeleccionado && talleSeleccionado) {
+        
+        // Buscar la variante para verificar stock
+        const variante = variantes.find(v => 
+            v.color === colorSeleccionado && 
+            v.talle === talleSeleccionado
+        );
+        
+        console.log('4. Variante encontrada:', variante);
+        
+        if (!variante || variante.stock <= 0) {
+            alert('❌ Producto sin stock');
+            return;
+        }
         
         // Crear objeto del producto
         const producto = {
@@ -215,11 +249,15 @@ btnAgregar.addEventListener('click', function() {
             talle: talleSeleccionado,
             precio: <?php echo ($producto['precio_oferta'] ?? $producto['precio']); ?>,
             cantidad: 1,
-            imagen: 'https://placehold.co/100x100'
+            stock: variante.stock,
+            imagen: '<?php echo !empty($producto['imagenes'][0]['imagen_url']) ? $producto['imagenes'][0]['imagen_url'] : 'https://placehold.co/100x100'; ?>'
         };
         
-        // Obtener carrito actual de localStorage
+        console.log('5. Producto a agregar:', producto);
+        
+        // Obtener carrito actual
         let carrito = JSON.parse(localStorage.getItem('vrossoc_carrito')) || [];
+        console.log('6. Carrito actual:', carrito);
         
         // Buscar si ya existe el mismo producto
         const existenteIndex = carrito.findIndex(item => 
@@ -230,29 +268,48 @@ btnAgregar.addEventListener('click', function() {
         
         if (existenteIndex !== -1) {
             // Si existe, aumentar cantidad
-            carrito[existenteIndex].cantidad += 1;
+            carrito[existenteIndex].cantidad = (parseInt(carrito[existenteIndex].cantidad) || 1) + 1;
+            console.log('7. Producto existente, nueva cantidad:', carrito[existenteIndex].cantidad);
         } else {
             // Si no existe, agregar nuevo
             carrito.push(producto);
+            console.log('7. Producto nuevo agregado');
         }
         
         // Guardar en localStorage
         localStorage.setItem('vrossoc_carrito', JSON.stringify(carrito));
+        console.log('8. Carrito guardado:', carrito);
+        
+        // ACTUALIZAR CONTADOR - Múltiples métodos para asegurar
+        actualizarContadorLocal();
+        
+        // También intentar con la función global si existe
+        if (typeof window.actualizarContadorCarrito === 'function') {
+            window.actualizarContadorCarrito();
+        }
+        
+        // Forzar actualización del contador en el DOM
+        const totalItems = carrito.reduce((sum, item) => sum + (parseInt(item.cantidad) || 1), 0);
+        const contador = document.getElementById('contador-carrito');
+        if (contador) {
+            contador.textContent = totalItems;
+            contador.style.display = 'inline';
+            console.log('9. Contador forzado a:', totalItems);
+        } else {
+            console.log('9. ERROR: No se encontró el elemento contador-carrito');
+        }
         
         // Mostrar notificación
         alert('✅ Producto agregado al carrito');
         
-        // Actualizar contador si existe
-        const contador = document.getElementById('contador-carrito');
-        if (contador) {
-            const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-            contador.textContent = totalItems;
-            contador.style.display = totalItems > 0 ? 'inline' : 'none';
-        }
-        
     } else {
         alert('⚠️ Debes seleccionar color y talle');
     }
+});
+
+// Inicializar contador al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    actualizarContadorLocal();
 });
 </script>
 
